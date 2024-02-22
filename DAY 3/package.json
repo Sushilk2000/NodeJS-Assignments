@@ -1,0 +1,15 @@
+{
+  "name": "binary-search-sushil-kulkarni",
+  "version": "1.0.0",
+  "description": "A binary search function",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "binary",
+    "search"
+  ],
+  "author": "Sushil Kulkarni",
+  "license": "ISC"
+}
