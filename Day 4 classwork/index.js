@@ -2,11 +2,11 @@ import { load } from "cheerio";
 import { utils, writeFile } from "xlsx";
 import axios from "axios";
 
-const products = [];
+const data = [];
 async function getData() {
   try {
     const response = await axios.get(
-      "https://nirzon47.github.io/html-datasets/products-dataset.html",
+      "https://nirzon47.github.io/html-datasets/data-dataset.html",
       {
         headers: {
           "Content-Type": "application/json",
@@ -22,11 +22,11 @@ async function getData() {
         product_rating: $(element).find(".product-rating").text(),
       };
 
-      products.push(product);
+      data.push(product);
     });
-    console.log(products);
+    console.log(data);
     const workbook = utils.book_new();
-    const worksheet = utils.json_to_sheet(products);
+    const worksheet = utils.json_to_sheet(data);
     console.log(worksheet);
     utils.book_append_sheet(workbook, worksheet, "Sheet");
     writeFile(workbook, "productData.xlsx");
