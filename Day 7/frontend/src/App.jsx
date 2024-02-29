@@ -23,15 +23,18 @@ function App() {
   }
   async function postUrl(url) {
     try {
-      const response = await fetch("http://localhost:3000/urlShortner", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          longUrl: url,
-        }),
-      });
+      const response = await fetch(
+        "https://nodejs-day-7-backend.onrender.com/urlShortner",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            longUrl: url,
+          }),
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setShorten(data.shortUrl);
@@ -74,7 +77,7 @@ function App() {
               <p className="font-semibold text-lg">
                 Your shortend URL:{" "}
                 <span className="font-bold">
-                  {`http://localhost:3000/${shorten}`}
+                  {`https://nodejs-day-7-backend.onrender.com//${shorten}`}
                 </span>
               </p>
               <button
