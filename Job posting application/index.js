@@ -5,7 +5,7 @@ const app = express();
 const password = encodeURIComponent("Justmenu@123");
 const port = 5000;
 mongoose
-  .connect(`mongodb://localhost:27017`)
+  .connect(`mongodb://localhost:27017/jobs`)
   .then(() => {
     console.log("Database connected successfully");
   })
