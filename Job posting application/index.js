@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const jobRoutes = require("./routes/jobs");
 const app = express();
 const password = encodeURIComponent("Justmenu@123");
-const port = 5000;
+const port = 10000;
 mongoose
   .connect(`mongodb://localhost:27017/jobs`)
   .then(() => {
