@@ -36,7 +36,7 @@ const getJob = async (req, res) => {
 
 const editJob = async (req, res) => {
   try {
-    jobModel.updateOne({ _id: req.body._id }, { $set: req.body });
+    await jobModel.updateOne({ _id: req.body._id }, { $set: req.body });
     res.json({
       sucess: true,
       message: "Job edited successfully",
@@ -52,7 +52,7 @@ const editJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
   try {
-    jobModel.deleteOne({ _id: req.body._id });
+    await jobModel.deleteOne({ _id: req.body._id });
     res.json({
       sucess: true,
       message: "Job deleted Successfully",
