@@ -6,13 +6,13 @@ const userRouters = require("./Routes/UserRoutes");
 app.use(express.json());
 mongoose
   .connect(
-    "mongodb+srv://sushilkkkkk:justmenu123@cluster0.pil2sin.mongodb.net/"
+    `mongodb+srv://sushilkkkkk:justmenu123@cluster0.pil2sin.mongodb.net/`
   )
   .then(() => {
     console.log("Database connected successfully");
   })
   .catch((err) => {
-    console.log(err);
+    console.log("Database connection failed", err);
   });
 app.use("/api/v1/user", userRouters);
 
