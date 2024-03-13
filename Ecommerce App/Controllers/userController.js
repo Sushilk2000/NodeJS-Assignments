@@ -1,5 +1,6 @@
 const UserModel = require("../Models/UserModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const userRegistrator = async (req, res) => {
   const newUser = new UserModel({
     ...req.body,
@@ -13,6 +14,7 @@ const userRegistrator = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
+    console.log(user);
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -25,9 +27,19 @@ const userLogin = async (req, res) => {
       user.password
     );
     if (isPasswordCorrect) {
+      const exptime = Math.floor(Date.now() / 1000) + 3600;
+      const token = jwt.sign(
+        {
+          name: user.firstName,
+          role: user.role,
+          exp: exptime,
+        },
+        "abcabcabcabc"
+      );
       res.json({
         success: true,
         message: "User logged in successfully",
+        token: token,
       });
     } else {
       res.json({
@@ -40,6 +52,7 @@ const userLogin = async (req, res) => {
       success: false,
       message: "Something went wrong",
     });
+    console.log(error);
   }
 };
 
