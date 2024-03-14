@@ -40,7 +40,7 @@ const editProduct = async (req, res) => {
     const payload = jwt.decode(req.headers.authorization);
     if (payload.role === "admin") {
       const productId = req.body._id;
-      delete req.body._id; // Remove _id from the request body
+      delete req.body._id;
       await productModel.updateOne({ _id: productId }, { $set: req.body });
       res.json({
         success: true,
@@ -56,8 +56,59 @@ const editProduct = async (req, res) => {
   }
 };
 
+const likeDislikeProduct = async (req, res) => {
+  try {
+    const updateObject = {
+      $push: {
+        likes: req.user._id,
+      },
+      $pull: {
+        dislikes: req.user._id,
+      },
+    };
+    if (req.params.action === "dislike") {
+      updateObject = {
+        $push: {
+          dislikes: req.user._id,
+        },
+        $pull: {
+          likes: req.user._id,
+        },
+      };
+      await productModel.findByIdAndUpdate(req.params.productId, updateObject);
+
+      res.json({
+        sucess: true,
+        message: `product ${req.params.action}d successfully`,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      sucess: false,
+      message: "Something went wrong",
+    });
+  }
+};
+const ratingAndReview = async (req, res) => {
+  try {
+    updatedObj = {
+      $push: {
+        rating: req.body.rating,
+        review: req.body.review,
+      },
+    };
+    await productModel.findByIdAndUpdate(req.params.productId, updatedObj);
+  } catch (error) {
+    res.status(500).json({
+      sucess: false,
+      message: "Something went wrong",
+    });
+  }
+};
 module.exports = {
   createProduct,
   getProduct,
   editProduct,
+  likeDislikeProduct,
+  ratingAndReview,
 };

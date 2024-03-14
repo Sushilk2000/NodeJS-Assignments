@@ -24,6 +24,16 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "user"],
     default: "user",
   },
+  likedProducts: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "products",
+    default: [],
+  },
+  dislikedProducts: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "products",
+    default: [],
+  },
 });
 userSchema.pre("save", function () {
   const salt = bcrypt.genSaltSync(10);

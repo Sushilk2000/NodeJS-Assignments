@@ -56,16 +56,50 @@ const userLogin = async (req, res) => {
   }
 };
 
-const userLogout = (req, res) => {
+const userLogout = async (req, res) => {
   try {
     res.json({ success: true, message: "User logged out successfully" });
   } catch (error) {
     console.log(error);
   }
 };
-
+const getLikedProducts = async (req, res) => {
+  try {
+    const result = await UserModel.findById(req.params.user._id).likedProducts;
+    res.json({
+      success: true,
+      message: `User ${req.params.user.firstName} has liked following products`,
+      results: result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+    console.log(err);
+  }
+};
+const getDislikedProducts = async (req, res) => {
+  try {
+    const result = await UserModel.findById(req.params.user._id)
+      .dislikedProducts;
+    res.json({
+      success: true,
+      message: `User ${req.params.user.firstName} has disliked following products`,
+      results: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+    console.log(error);
+  }
+};
 module.exports = {
   userRegistrator,
   userLogin,
   userLogout,
+  getLikedProducts,
+  getDislikedProducts,
 };

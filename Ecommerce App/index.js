@@ -15,7 +15,8 @@ mongoose
     console.log("Database connection failed", err);
   });
 app.use("/api/v1/user", userRouters);
-app.use("/api/v1/product", authMiddleware, productRouters);
+app.use("/api/v1/product", productRouters);
+
 app.listen(10000, () => {
   console.log(`Server is up and running at port 10000`);
 });
