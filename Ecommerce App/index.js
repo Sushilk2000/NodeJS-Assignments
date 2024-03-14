@@ -6,8 +6,7 @@ const userRouters = require("./Routes/UserRoutes");
 const productRouters = require("./Routes/ProductRoute");
 app.use(express.json());
 mongoose
-  // `mongodb+srv://sushilkkkkk:Justmenu@cluster0.pil2sin.mongodb.net/`
-  .connect("mongodb://localhost:27017/ecommerce")
+  .connect("mongodb+srv://sushilkkkkk:Justmenu@cluster0.pil2sin.mongodb.net/")
   .then(() => {
     console.log("Database connected successfully");
   })
