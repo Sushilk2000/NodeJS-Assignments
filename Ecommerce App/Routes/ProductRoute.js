@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../Middlewares/productMiddleware");
 const productController = require("../Controllers/productController");
-router.post("/", authMiddleware(["admin"]).productController.createProduct);
+router.post("/", authMiddleware(["admin"]), productController.createProduct);
 router.get(
   "/",
   authMiddleware(["admin", "user"]),

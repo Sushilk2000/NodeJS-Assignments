@@ -1,11 +1,13 @@
 const jwt = require("jsonwebtoken");
-const authMiddleware = (role = async (req, res, next) => {
+const authMiddleware = (role) => async (req, res, next) => {
   try {
     const tokenFromHeaders = req.headers.authorization.split(" ")[1];
     const data = jwt.verify(tokenFromHeaders, "abcabcabcabc");
+    // console.log("TOKEN", tokenFromHeaders);
     const payload = jwt.decode(tokenFromHeaders);
     if (role.includes(payload.role)) {
       const user = await UserModel.findById(payload.id);
+      // console.log("USER", user);
       req.user = user;
       next();
     } else {
@@ -21,6 +23,6 @@ const authMiddleware = (role = async (req, res, next) => {
       message: "Forbidden",
     });
   }
-});
+};
 
 module.exports = authMiddleware;
