@@ -81,8 +81,7 @@ const getLikedProducts = async (req, res) => {
 };
 const getDislikedProducts = async (req, res) => {
   try {
-    const result = await UserModel.findById(req.params.user._id)
-      .dislikedProducts;
+    const result = await UserModel.findById(req.user._id).dislikedProducts;
     res.json({
       success: true,
       message: `User ${req.params.user.firstName} has disliked following products`,
@@ -96,10 +95,36 @@ const getDislikedProducts = async (req, res) => {
     console.log(error);
   }
 };
+const WishlistUpdatation = async (req, res) => {
+  try {
+    const status = req.user.wishlist.includes(req.body.productId);
+    if (status) {
+      updateObject = {
+        $pull: {
+          wishlist: req.body.productId,
+        },
+      };
+      await UserModel.findByIdAndUpdate(req.user._id, updateObject);
+    } else {
+      updateObject = {
+        $push: {
+          wishlist: req.body.productId,
+        },
+      };
+      await UserModel.findByIdAndUpdate(req.user._id, updateObject);
+    }
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 module.exports = {
   userRegistrator,
   userLogin,
   userLogout,
   getLikedProducts,
   getDislikedProducts,
+  WishlistUpdatation,
 };

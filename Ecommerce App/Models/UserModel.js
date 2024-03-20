@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema({
     ref: "products",
     default: [],
   },
+  wishlist: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "products",
+    default: [],
+  },
 });
 userSchema.pre("save", function () {
   const salt = bcrypt.genSaltSync(10);
