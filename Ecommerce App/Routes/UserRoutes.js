@@ -44,4 +44,6 @@ router.post(
     "user/deleteproductfromcart",
     authMiddleware(["admim", "user"]),
     userController.deleteProductFromCart
-  )((module.exports = router));
+  );
+
+module.exports = router;
