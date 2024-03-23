@@ -63,6 +63,35 @@ const userLogout = async (req, res) => {
     console.log(error);
   }
 };
+const userUpdate = async (req, res) => {
+  try {
+    const updatedUser = req.body.updatedUser;
+    await UserModel.findByIdAndUpdate(req.user._id, updatedUser);
+    res.json({
+      success: true,
+      message: `User details of user with id ${req.user._id} has been successfully updated.`,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "something went wrong",
+    });
+  }
+};
+const deleteUser = async (req, res) => {
+  try {
+    const deleted = await UserModel.findByIdAndDelete(req.user._id);
+    res.json({
+      success: true,
+      message: `User with id ${req.user._id} has been successfully deleted`,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 const getLikedProducts = async (req, res) => {
   try {
     const result = await UserModel.findById(req.params.user._id).likedProducts;
@@ -113,6 +142,10 @@ const WishlistUpdatation = async (req, res) => {
       };
       await UserModel.findByIdAndUpdate(req.user._id, updateObject);
     }
+    res.json({
+      success: true,
+      message: "wishlist updatation successful",
+    });
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -120,6 +153,70 @@ const WishlistUpdatation = async (req, res) => {
     });
   }
 };
+const addToCart = async (req, res) => {
+  try {
+    updateObject = {
+      $push: {
+        cart: req.body.productDetails,
+      },
+    };
+    await UserModel.findByIdAndUpdate(req.user._id, updateObject);
+    res.json({
+      success: true,
+      message: `Product ${req.params.productId} has been added to cart of User`,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+const updateProductQuantity = async (req, res) => {
+  try {
+    const productIdToUpdate = req.body.productId;
+    const updateQuantity = req.body.increase ? 1 : -1;
+    const result = await UserModel.findOneAndUpdate(
+      { _id: req.user._id, "cart.ProductId": productIdToUpdate },
+      { $inc: { "cart.$.quantity": updateQuantity } },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Product quantity updated successfully",
+      cart: result.cart,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+const deleteProductFromCart = async (req, res) => {
+  try {
+    const productIdToDelete = req.body.productId;
+
+    const result = await UserModel.findOneAndUpdate(
+      { _id: req.user._id },
+      { $pull: { cart: { ProductId: productIdToDelete } } },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted from cart successfully",
+      cart: result.cart,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   userRegistrator,
   userLogin,
@@ -127,4 +224,9 @@ module.exports = {
   getLikedProducts,
   getDislikedProducts,
   WishlistUpdatation,
+  deleteUser,
+  userUpdate,
+  addToCart,
+  updateProductQuantity,
+  deleteProductFromCart,
 };

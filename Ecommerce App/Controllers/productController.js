@@ -55,7 +55,20 @@ const editProduct = async (req, res) => {
     });
   }
 };
-
+const deleteProduct = async (req, res) => {
+  try {
+    const result = await productModel.findByIdAndDelete(req.params.productId);
+    res.json({
+      success: true,
+      message: `Product with id ${req.params.productId} has been deleted successfully`,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 const likeDislikeProduct = async (req, res) => {
   try {
     const updateObject = {
@@ -109,6 +122,7 @@ module.exports = {
   createProduct,
   getProduct,
   editProduct,
+  deleteProduct,
   likeDislikeProduct,
   ratingAndReview,
 };

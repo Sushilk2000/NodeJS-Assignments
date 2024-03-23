@@ -19,4 +19,9 @@ router.post(
   authMiddleware(["admin", "user"]),
   productController.ratingAndReview
 );
+router.post(
+  "/:productId/delete",
+  authMiddleware(["admin"]),
+  productController.deleteProduct
+);
 module.exports = router;
