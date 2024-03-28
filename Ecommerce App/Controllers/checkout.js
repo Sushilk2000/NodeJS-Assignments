@@ -45,17 +45,17 @@ export const checkout = async (req, res) => {
 
     if (!orderObject) {
       const newOrder = await OrderModel({
-        userID: userID,
+        userId: UserId,
         orders: [order],
       });
       await newOrder.save();
     } else {
       await OrderModel.findOneAndUpdate(
-        { UserID: UserID },
+        { userId: UserId },
         { $push: { orders: order } }
       );
     }
-    await CartModel.findByIdAndDelete(cart._id);
+    await cartModel.findByIdAndDelete(cart._id);
     res.json({
       success: true,
       message: "Checkout successful",
