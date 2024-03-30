@@ -60,13 +60,13 @@ const checkoutCart = async (req, res) => {
       receipt: uuidv4(),
       payment_capture: 1,
     };
-
     let RPOrder;
     if (paymentMode === "online") {
       try {
         RPOrder = await razorpay.orders.create(options);
       } catch (error) {
-        throw new Error(error);
+        console.error("Razorpay Order Creation Error:", error);
+        throw new Error("Failed to create Razorpay order");
       }
     }
 
