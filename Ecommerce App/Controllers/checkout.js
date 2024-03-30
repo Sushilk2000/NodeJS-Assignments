@@ -5,7 +5,7 @@ const { OrderModel, orderModel } = require("../Models/Order.js");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 const { v4: uuidv4 } = require("uuid");
-import { couponModel } from "../../models/coupon.js";
+const { couponModel } = require("../Models/Coupon.js");
 
 dotenv.config();
 
