@@ -1,73 +1,57 @@
 const mongoose = require("mongoose");
-const cartScheamas = require("./Cart");
-const deliveryAddressSchema = new mongoose.Schema({
-  address: {
-    type: String,
-    required: false,
-    deault: "",
-  },
-  city: {
-    type: String,
-    requied: false,
-    default: "",
-  },
-  state: {
-    type: String,
-    requied: false,
-    default: "",
-  },
-  pincode: {
-    type: String,
-    requied: false,
-    default: "",
-  },
-});
-const orderSchema = new mongoose.Schema({
-  cart: {
-    type: cartScheamas.cartSchema,
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  amount: {
-    type: Number,
-    required: true,
-  },
-  coupon: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: false,
-    default: null,
-  },
-  deliveryAddress: {
-    type: deliveryAddressSchema,
-    required: true,
-  },
-  orderPlaceAt: {
-    type: Date,
-    required: true,
-  },
-  deliveryDate: {
-    type: Date,
-    required: true,
-  },
-  orderStatus: {
-    type: String,
-    required: true,
-  },
-  modeOfPayment: {
-    type: String,
-    required: true,
-  },
-  transactionId: {
-    type: String,
-    required: false,
-    default: "",
-  },
+const cartSchema = new mongoose.Schema({
+  products: [
+    {
+      item: { type: Schema.Types.ObjectId, ref: "products" },
+      quantity: { type: Number, required: true },
+      variant: { type: String, required: true, default: "Default" },
+    },
+  ],
 });
 
-const OrderModel = mongoose.model("orders", orderSchema);
+const orderHistorySchema = new mongoose.Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "users",
+    required: true,
+  },
+  orders: [
+    {
+      cart: cartSchema,
+      total: {
+        type: Number,
+        required: true,
+      },
+      date: {
+        type: String,
+        required: true,
+      },
+      deliveryDate: {
+        type: String,
+        required: true,
+      },
+      coupon: {
+        type: String,
+        default: null,
+      },
+      paymentStatus: {
+        type: String,
+        required: true,
+      },
+      paymentMode: {
+        type: String,
+        required: true,
+      },
+      RPOrder: {
+        type: Object,
+        default: null,
+      },
+    },
+  ],
+});
 
-module.exports = { OrderModel };
+const orderModel = mongoose.model("orderHistory", orderHistorySchema);
+
+module.exports = {
+  orderModel,
+};

@@ -1,4 +1,4 @@
-import { CouponModel } from "../Models/Coupon";
+const CouponModel = require("../models/Coupon");
 
 const createCoupon = async (req, res) => {
   try {

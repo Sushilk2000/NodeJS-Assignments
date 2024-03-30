@@ -6,44 +6,44 @@ router.post("/register", userController.userRegistrator);
 router.post("/login", userController.userLogin);
 router.post("/logout", userController.userLogout);
 router.get(
-  "user/likedProducts",
+  "/likedProducts",
   authMiddleware(["admin", "user"]),
   userController.getLikedProducts
 );
 router.get(
-  "user/dislikedProducts",
+  "/dislikedProducts",
   authMiddleware(["admin", "user"]),
   userController.getDislikedProducts
 );
 router.post(
-  "user/deleteUser",
+  "/deleteUser",
   authMiddleware(["admin", "user"]),
   userController.deleteUser
 );
 router.post(
-  "user/updateUser",
+  "/updateUser",
   authMiddleware(["admim", "user"]),
   userController.userUpdate
 );
 router.post(
-  "user/updateWishlist",
+  "/updateWishlist",
   authMiddleware(["admim", "user"]),
   userController.WishlistUpdatation
 );
 router.post(
-  "user/addtocart",
+  "/addtocart",
   authMiddleware(["admim", "user"]),
   userController.addToCart
 );
 router.post(
-  "user/updateproductquantity",
+  "/updateproductquantity",
   authMiddleware(["admim", "user"]),
   userController.updateProductQuantity
 ),
   router.post(
-    "user/deleteproductfromcart",
+    "/deleteproductfromcart",
     authMiddleware(["admim", "user"]),
     userController.deleteProductFromCart
   );
-
+// router.post("/forgotpassword", userController.forgotPassword);
 module.exports = router;

@@ -1,70 +1,134 @@
-import { cartModel } from "../Models/Cart";
-import { UserModel } from "../Models/UserModel";
-import { OrderModel } from "../Models/Order";
-import dayjs from "dayjs";
-const razorpay = require("razorpay");
-var instance = new razorpay({
-  key_id: "Your Key Id",
-  key_secret: "Your key secret",
+const { cartModel } = require("../Models/Cart.js");
+const { userModel } = require("../Models/UserModel.js");
+const dayjs = require("dayjs");
+const { OrderModel, OrderModel } = require("../Models/Order.js");
+const Razorpay = require("razorpay");
+const dotenv = require("dotenv");
+import { v4 as uuid } from "uuid";
+import { couponModel } from "../../models/coupon.js";
+
+dotenv.config();
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-export const checkout = async (req, res) => {
+// Controller for placing an order
+export const checkoutCart = async (req, res) => {
   try {
-    const UserId = req.user._id;
-    const User = await UserModel.findById(UserId, { address: 1 });
-    if ("{}" === JSON.stringify(User.address)) {
+    // Gets the user ID from the middleware
+    const userID = req.user._id;
+    const paymentMode = req.body.paymentMode;
+    const coupon = req.body.coupon;
+
+    // Checks if the user has an address
+    const user = await userModel.findById(userID, { address: 1 });
+
+    // If the user has no address, send an error response
+    if ("{}" === JSON.stringify(user.address)) {
       throw new Error("No address");
     }
 
-    const cart = await cartModel.findOne({ user: UserId }).populate({
+    // Gets the cart of the user and populates the item and user fields
+    const cart = await cartModel.findOne({ user: userID }).populate({
       path: "products.item",
       select: "name price",
     });
+
+    // If the cart is empty, send an error response
     if (cart.products.length === 0) {
-      throw new Error("Cart is Empty");
+      throw new Error("Cart is empty");
     }
-    const total = cart.products.reduce((sum, cartItem) => {
-      sum + cartItem.quantity * cartItem.price, 0;
-    });
+
+    // Calculates the total price of the cart
+    let total = cart.products.reduce(
+      (sum, cartItem) => sum + cartItem.quantity * cartItem.item.price,
+      0
+    );
+
+    // If a coupon is provided, calculate the discount
+    if (coupon) {
+      // Gets the coupon from the database
+      const couponData = await couponModel.findOne({ code: coupon }).populate({
+        path: "coupons",
+      });
+
+      const discount = couponData.discount;
+      const discountAmount = (total * discount) / 100;
+
+      total = total - Math.min(discountAmount, couponData.limit);
+    }
+
+    // Generates a random delivery date
     const randomNumber = Math.floor(Math.random() * 7);
     const deliveryDate = dayjs().add(randomNumber, "days").valueOf();
 
+    // Razorpay options
+    const options = {
+      amount: total * 100,
+      currency: "INR",
+      receipt: uuid(),
+      payment_capture: 1,
+    };
+
+    // Razorpay order
+    let RPOrder;
+    if (paymentMode === "online") {
+      try {
+        RPOrder = await razorpay.orders.create(options);
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+
+    // Creates the order
     const order = {
       cart,
       total,
       date: Date.now(),
       deliveryDate: deliveryDate,
       coupon: req.body.coupon || null,
-      orderStatus: "placed",
-      paymentMode: req.body.paymentMode || "COD",
-      transactionId: null,
+      orderStatus: "Placed",
+      paymentMode: paymentMode,
+      paymentStatus: paymentMode === "cod" ? "Paid" : "Pending",
+      RPOrder: paymentMode === "cod" ? null : RPOrder,
     };
-    const orderObject = await OrderModel.findOne({
-      userId: UserId,
+
+    // Gets the order history collection that matches the userID
+    const Order = await OrderModel.findOne({
+      user: userID,
     });
 
-    if (!orderObject) {
-      const newOrder = await OrderModel({
-        userId: UserId,
+    // If there is no order history, create a new one
+    if (!Order) {
+      const orderHistory = new OrderModel({
+        user: userID,
         orders: [order],
       });
-      await newOrder.save();
+      await orderHistory.save();
     } else {
+      // If there is an order history, push the new order
       await OrderModel.findOneAndUpdate(
-        { userId: UserId },
+        { user: userID },
         { $push: { orders: order } }
       );
     }
+
+    // Deletes the cart
     await cartModel.findByIdAndDelete(cart._id);
-    res.json({
+
+    // Upon success, send a success response
+    res.status(200).json({
       success: true,
-      message: "Checkout successful",
+      message: "Checkout successful and cart deleted",
       order: order,
     });
-  } catch (error) {
+  } catch (err) {
+    // Upon failure, send an error response
     res.status(500).json({
       success: false,
-      message: error.message || "Checkout Failed",
+      message: err.message || "Checkout failed",
     });
   }
 };

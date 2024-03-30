@@ -1,6 +1,8 @@
-const UserModel = require("../Models/UserModel");
+const { UserModel } = require("../Models/UserModel");
+const { cartModel } = require("../Models/Cart");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const userRegistrator = async (req, res) => {
   const newUser = new UserModel({
     ...req.body,
@@ -32,6 +34,7 @@ const userLogin = async (req, res) => {
         {
           name: user.firstName,
           role: user.role,
+          id: user._id,
           exp: exptime,
         },
         "abcabcabcabc"
@@ -155,18 +158,57 @@ const WishlistUpdatation = async (req, res) => {
 };
 const addToCart = async (req, res) => {
   try {
-    updateObject = {
-      $push: {
-        cart: req.body.productDetails,
-      },
-    };
-    await UserModel.findByIdAndUpdate(req.user._id, updateObject);
+    const userCart = await cartModel.findOne({ userId: req.user._id });
+    if (userCart) {
+      const updateObject = {
+        $push: {
+          products: req.body.products,
+        },
+      };
+
+      const cart = await cartModel.findOneAndUpdate(
+        { userId: req.user._id },
+        updateObject
+      );
+      res.json({
+        success: true,
+        message: "User cart updated successfully",
+        cart: cart,
+      });
+    } else {
+      let cartTotal = 0;
+      const productsToAdd = [];
+      for (let i = 0; i < req.body.products.length; i++) {
+        const currentProduct = req.body.products[i];
+        const { price } = await productModel.findById(
+          currentProduct.productId,
+          {
+            price: 1,
+            _id: 0,
+          }
+        );
+
+        const product = {
+          ...currentProduct,
+          price,
+        };
+        productsToAdd.push(product);
+        const priceForProduct = currentProduct.quantity * price;
+        cartTotal += priceForProduct;
+      }
+
+      await cartModel.create({
+        products: productsToAdd,
+        cartTotal: cartTotal,
+        userId: req.user._id,
+      });
+    }
     res.json({
       success: true,
-      message: `Product ${req.params.productId} has been added to cart of User`,
+      message: "User cart updated successfully",
     });
   } catch (error) {
-    res.json({
+    res.status(404).json({
       success: false,
       message: "Something went wrong",
     });
@@ -216,7 +258,6 @@ const deleteProductFromCart = async (req, res) => {
     });
   }
 };
-
 module.exports = {
   userRegistrator,
   userLogin,

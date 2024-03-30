@@ -1,16 +1,29 @@
 const productModel = require("../Models/ProductModel");
 const jwt = require("jsonwebtoken");
+const { UserModel } = require("../Models/UserModel");
+const { brandModel } = require("../Models/Brands");
 const createProduct = async (req, res) => {
   try {
-    console.log("productDecoded", req.decoded);
-    if (req.decoded.role == "admin") {
-      const newproduct = await productModel.create(req.body);
-      console.log(newproduct);
-      res.json({
-        success: true,
-        message: "Product created successfully",
+    const newproduct = await productModel.create(req.body);
+    console.log(newproduct);
+    const brand = await brandModel.findOne({ brand: req.body.brand });
+    console.log("brands", brand);
+    if (!brand) {
+      console.log("brand", brand);
+      brand = await brandModel.create({
+        brand: req.body.brand,
       });
     }
+    const updateBrand = {
+      $push: {
+        products: newproduct._id,
+      },
+    };
+    await brandModel.updateOne({ brand: req.body.brand }, updateBrand);
+    res.json({
+      success: true,
+      message: "Product created successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -37,16 +50,12 @@ const getProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-    const payload = jwt.decode(req.headers.authorization);
-    if (payload.role === "admin") {
-      const productId = req.body._id;
-      delete req.body._id;
-      await productModel.updateOne({ _id: productId }, { $set: req.body });
-      res.json({
-        success: true,
-        message: "Product updated successfully",
-      });
-    }
+    const productId = req.params.productId;
+    await productModel.updateOne({ _id: productId }, { $set: req.body });
+    res.json({
+      success: true,
+      message: "Product updated successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -70,38 +79,58 @@ const deleteProduct = async (req, res) => {
   }
 };
 const likeDislikeProduct = async (req, res) => {
+  console.log(req);
   try {
-    const updateObject = {
+    let updateObject = {
       $push: {
-        likes: req.user._id,
+        liked: req.user._id,
       },
       $pull: {
-        dislikes: req.user._id,
+        disliked: req.user._id,
+      },
+    };
+    let updateUser = {
+      $push: {
+        likedProducts: req.params.productId,
+      },
+      $pull: {
+        dislikedProducts: req.params.productId,
       },
     };
     if (req.params.action === "dislike") {
       updateObject = {
         $push: {
-          dislikes: req.user._id,
+          disliked: req.user._id,
         },
         $pull: {
-          likes: req.user._id,
+          liked: req.user._id,
         },
       };
-      await productModel.findByIdAndUpdate(req.params.productId, updateObject);
 
-      res.json({
-        sucess: true,
-        message: `product ${req.params.action}d successfully`,
-      });
+      updateUser = {
+        $push: {
+          dislikedProducts: req.params.productId,
+        },
+        $pull: {
+          likedProducts: req.params.productId,
+        },
+      };
     }
+    await productModel.findByIdAndUpdate(req.params.productId, updateObject);
+    await UserModel.findByIdAndUpdate(req.user._id, updateUser);
+    res.json({
+      success: true,
+      message: `Product ${req.params.action}d successfully`,
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
-      sucess: false,
-      message: "Something went wrong",
+      success: false,
+      message: "Something went wrong here",
     });
   }
 };
+
 const ratingAndReview = async (req, res) => {
   try {
     updatedObj = {
@@ -118,6 +147,22 @@ const ratingAndReview = async (req, res) => {
     });
   }
 };
+const getProductbyBrand = async (req, res) => {
+  try {
+    const productList = await productModel.find({ brand: req.params.brand });
+    res.json({
+      success: true,
+      message: "Dummy product get Api",
+      results: productList,
+    });
+  } catch (error) {
+    res.status(400).json({
+      sucess: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   getProduct,
@@ -125,4 +170,5 @@ module.exports = {
   deleteProduct,
   likeDislikeProduct,
   ratingAndReview,
+  getProductbyBrand,
 };

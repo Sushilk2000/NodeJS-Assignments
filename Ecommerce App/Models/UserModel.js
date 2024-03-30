@@ -21,8 +21,35 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ["admin", "user"],
-    default: "user",
+  },
+  tokens: {
+    type: Array,
+    default: [],
+  },
+  wishlist: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    ref: "products",
+  },
+  address: {
+    street: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    district: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    zip: {
+      type: Number,
+    },
+    country: {
+      type: String,
+    },
   },
   likedProducts: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -30,11 +57,6 @@ const userSchema = new mongoose.Schema({
     default: [],
   },
   dislikedProducts: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "products",
-    default: [],
-  },
-  wishlist: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "products",
     default: [],

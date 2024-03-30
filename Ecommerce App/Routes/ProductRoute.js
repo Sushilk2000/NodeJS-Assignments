@@ -8,7 +8,16 @@ router.get(
   authMiddleware(["admin", "user"]),
   productController.getProduct
 );
-router.patch("/", authMiddleware(["admin"]), productController.editProduct);
+router.patch(
+  "/edit/:productId",
+  authMiddleware(["admin"]),
+  productController.editProduct
+);
+router.get(
+  "/productByBrand/:brand",
+  authMiddleware(["admin", "user"]),
+  productController.getProductbyBrand
+);
 router.post(
   "/:productId/likedislike/:action",
   authMiddleware(["admin", "user"]),
@@ -24,4 +33,5 @@ router.post(
   authMiddleware(["admin"]),
   productController.deleteProduct
 );
+
 module.exports = router;
