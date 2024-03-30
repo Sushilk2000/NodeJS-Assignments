@@ -4,7 +4,7 @@ const dayjs = require("dayjs");
 const { OrderModel, orderModel } = require("../Models/Order.js");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
-import { v4 as uuid } from "uuid";
+const { v4: uuidv4 } = require("uuid");
 import { couponModel } from "../../models/coupon.js";
 
 dotenv.config();
@@ -57,7 +57,7 @@ const checkoutCart = async (req, res) => {
     const options = {
       amount: total * 100,
       currency: "INR",
-      receipt: uuid(),
+      receipt: uuidv4(),
       payment_capture: 1,
     };
 
