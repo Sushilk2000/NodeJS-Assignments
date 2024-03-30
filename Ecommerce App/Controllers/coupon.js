@@ -1,5 +1,4 @@
-const CouponModel = require("../models/Coupon");
-
+const CouponModel = require("../Models/Coupon");
 const createCoupon = async (req, res) => {
   try {
     await CouponModel.create(req.body);

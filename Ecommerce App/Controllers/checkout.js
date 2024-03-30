@@ -1,9 +1,9 @@
+require("dotenv").config();
 const { cartModel } = require("../Models/Cart.js");
 const { userModel } = require("../Models/UserModel.js");
 const dayjs = require("dayjs");
 const { orderModel } = require("../Models/Order.js");
 const Razorpay = require("razorpay");
-const dotenv = require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
 const { couponModel } = require("../Models/Coupon.js");
 
