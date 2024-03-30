@@ -10,6 +10,7 @@ const categoriesRouters = require("./Routes/categoriesRouter");
 const blogsRouters = require("./Routes/blogsRouter");
 const couponRouters = require("./Routes/couponRouter");
 const checkoutRouter = require("./Routes/checkoutRouter");
+const orderRouter = require("./Routes/orderRouter");
 app.use(express.json());
 mongoose
   .connect("mongodb+srv://sushilkkkkk:Justmenu@cluster0.pil2sin.mongodb.net/")
@@ -27,6 +28,7 @@ app.use("/api/v1/checkout", checkoutRouters);
 app.use("api/v1/categories", categoriesRouters);
 app.use("api/v1/blogs", blogsRouters);
 app.use("api/v1/coupon", couponRouters);
+app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/checkout", checkoutRouter);
 app.listen(10000, () => {
   console.log(`Server is up and running at port 10000`);

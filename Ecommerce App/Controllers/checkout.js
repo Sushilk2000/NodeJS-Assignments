@@ -1,7 +1,7 @@
 const { cartModel } = require("../Models/Cart.js");
 const { userModel } = require("../Models/UserModel.js");
 const dayjs = require("dayjs");
-const { OrderModel, orderModel } = require("../Models/Order.js");
+const { orderModel } = require("../Models/Order.js");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 const { v4: uuidv4 } = require("uuid");
@@ -82,18 +82,18 @@ const checkoutCart = async (req, res) => {
       RPOrder: paymentMode === "cod" ? null : RPOrder,
     };
 
-    const Order = await OrderModel.findOne({
+    const Order = await orderModel.findOne({
       user: userID,
     });
 
     if (!Order) {
-      const orderHistory = new OrderModel({
+      const orderHistory = new orderModel({
         user: userID,
         orders: [order],
       });
       await orderHistory.save();
     } else {
-      await OrderModel.findOneAndUpdate(
+      await orderModel.findOneAndUpdate(
         { user: userID },
         { $push: { orders: order } }
       );
