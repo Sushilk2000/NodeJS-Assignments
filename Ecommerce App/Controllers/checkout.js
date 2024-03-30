@@ -1,7 +1,7 @@
 const { cartModel } = require("../Models/Cart.js");
 const { userModel } = require("../Models/UserModel.js");
 const dayjs = require("dayjs");
-const { OrderModel, OrderModel } = require("../Models/Order.js");
+const { OrderModel, orderModel } = require("../Models/Order.js");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 import { v4 as uuid } from "uuid";
@@ -14,42 +14,33 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Controller for placing an order
-export const checkoutCart = async (req, res) => {
+const checkoutCart = async (req, res) => {
   try {
-    // Gets the user ID from the middleware
     const userID = req.user._id;
     const paymentMode = req.body.paymentMode;
     const coupon = req.body.coupon;
 
-    // Checks if the user has an address
     const user = await userModel.findById(userID, { address: 1 });
 
-    // If the user has no address, send an error response
     if ("{}" === JSON.stringify(user.address)) {
       throw new Error("No address");
     }
 
-    // Gets the cart of the user and populates the item and user fields
     const cart = await cartModel.findOne({ user: userID }).populate({
       path: "products.item",
       select: "name price",
     });
 
-    // If the cart is empty, send an error response
     if (cart.products.length === 0) {
       throw new Error("Cart is empty");
     }
 
-    // Calculates the total price of the cart
     let total = cart.products.reduce(
       (sum, cartItem) => sum + cartItem.quantity * cartItem.item.price,
       0
     );
 
-    // If a coupon is provided, calculate the discount
     if (coupon) {
-      // Gets the coupon from the database
       const couponData = await couponModel.findOne({ code: coupon }).populate({
         path: "coupons",
       });
@@ -60,11 +51,9 @@ export const checkoutCart = async (req, res) => {
       total = total - Math.min(discountAmount, couponData.limit);
     }
 
-    // Generates a random delivery date
     const randomNumber = Math.floor(Math.random() * 7);
     const deliveryDate = dayjs().add(randomNumber, "days").valueOf();
 
-    // Razorpay options
     const options = {
       amount: total * 100,
       currency: "INR",
@@ -72,7 +61,6 @@ export const checkoutCart = async (req, res) => {
       payment_capture: 1,
     };
 
-    // Razorpay order
     let RPOrder;
     if (paymentMode === "online") {
       try {
@@ -82,7 +70,6 @@ export const checkoutCart = async (req, res) => {
       }
     }
 
-    // Creates the order
     const order = {
       cart,
       total,
@@ -95,12 +82,10 @@ export const checkoutCart = async (req, res) => {
       RPOrder: paymentMode === "cod" ? null : RPOrder,
     };
 
-    // Gets the order history collection that matches the userID
     const Order = await OrderModel.findOne({
       user: userID,
     });
 
-    // If there is no order history, create a new one
     if (!Order) {
       const orderHistory = new OrderModel({
         user: userID,
@@ -108,27 +93,50 @@ export const checkoutCart = async (req, res) => {
       });
       await orderHistory.save();
     } else {
-      // If there is an order history, push the new order
       await OrderModel.findOneAndUpdate(
         { user: userID },
         { $push: { orders: order } }
       );
     }
 
-    // Deletes the cart
     await cartModel.findByIdAndDelete(cart._id);
 
-    // Upon success, send a success response
     res.status(200).json({
       success: true,
       message: "Checkout successful and cart deleted",
       order: order,
     });
   } catch (err) {
-    // Upon failure, send an error response
     res.status(500).json({
       success: false,
       message: err.message || "Checkout failed",
     });
   }
+};
+
+const confirmPayment = async (req, res) => {
+  try {
+    const orderID = req.body.orderID;
+
+    const updatedOrder = await orderModel.findOneAndUpdate(
+      { "orders.cart._id": orderID },
+      { $set: { "orders.$.paymentStatus": "Paid" } }
+    );
+
+    res.json({
+      success: true,
+      message: "Payment successful",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Payment failed",
+    });
+  }
+};
+
+module.exports = {
+  checkoutCart,
+  confirmPayment,
 };

@@ -5,8 +5,14 @@ const checkoutController = require("../Controllers/checkout");
 
 router.post(
   "/",
-  authMiddleware(["user", "admin"]),
+  authMiddleware(["admin", "user"]),
   checkoutController.checkoutCart
+);
+
+router.post(
+  "/",
+  authMiddleware(["admin", "user"]),
+  checkoutController.confirmPayment
 );
 
 module.exports = { router };
