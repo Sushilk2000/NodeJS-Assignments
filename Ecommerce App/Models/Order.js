@@ -11,7 +11,7 @@ const cartSchema = new mongoose.Schema({
 
 const orderHistorySchema = new mongoose.Schema({
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "users",
     required: true,
   },
