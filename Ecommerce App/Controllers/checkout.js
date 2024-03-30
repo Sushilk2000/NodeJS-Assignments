@@ -3,11 +3,10 @@ const { userModel } = require("../Models/UserModel.js");
 const dayjs = require("dayjs");
 const { orderModel } = require("../Models/Order.js");
 const Razorpay = require("razorpay");
-const dotenv = require("dotenv");
+const dotenv = require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
 const { couponModel } = require("../Models/Coupon.js");
 
-dotenv.config();
 console.log(process.env.RAZORPAY_KEY_ID);
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
