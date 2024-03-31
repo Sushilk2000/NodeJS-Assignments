@@ -1,4 +1,3 @@
-require("dotenv").config();
 const { cartModel } = require("../Models/Cart.js");
 const { userModel } = require("../Models/UserModel.js");
 const dayjs = require("dayjs");
@@ -7,10 +6,9 @@ const Razorpay = require("razorpay");
 const { v4: uuidv4 } = require("uuid");
 const { couponModel } = require("../Models/Coupon.js");
 
-console.log(process.env.RAZORPAY_KEY_ID);
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_id: "rzp_test_PW7wlazGpDZgRT",
+  key_secret: "8KFGZqYmkgrRhqFqRSDbfhNk",
 });
 
 const checkoutCart = async (req, res) => {
