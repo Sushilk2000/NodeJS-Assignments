@@ -10,7 +10,7 @@ router.post(
 );
 
 router.post(
-  "/",
+  "/confirmPayment",
   authMiddleware(["admin", "user"]),
   checkoutController.confirmPayment
 );
