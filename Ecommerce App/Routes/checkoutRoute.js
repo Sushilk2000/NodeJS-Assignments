@@ -15,4 +15,4 @@ router.post(
   checkoutController.confirmPayment
 );
 
-module.exports = { router };
+module.exports = router;

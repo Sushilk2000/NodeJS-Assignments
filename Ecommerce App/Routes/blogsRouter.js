@@ -21,4 +21,4 @@ router.get(
   blogsController.getAuthors
 );
 
-module.exports = { router };
+module.exports = router;

@@ -10,4 +10,4 @@ router.post(
 );
 router.get("/", authMiddleware(["user", "admin"]), couponController.getCoupon);
 
-module.exports = { router };
+module.exports = router;

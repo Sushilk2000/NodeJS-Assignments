@@ -7,4 +7,4 @@ const orderController = require("../Controllers/orders");
 
 router.get("/", authMiddleware(["admin", "user"]), orderController.getOrders);
 
-module.exports = { router };
+module.exports = router;
