@@ -60,7 +60,7 @@ const AppointmentHistorySchema = new mongoose.Schema({
 });
 const AppointmentModel = mongoose.model("Appointments", AppointmentSchema);
 const AppointmentHistoryModel = mongoose.model(
-  "AppointmentHistory",
+  "AppointmentHistories",
   AppointmentHistorySchema
 );
 module.exports = { AppointmentModel, AppointmentHistoryModel };

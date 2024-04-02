@@ -17,8 +17,9 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   phone: {
-    type: String,
+    type: Number,
     required: true,
+    length: 10,
   },
   address: {
     type: String,
@@ -27,6 +28,7 @@ const UserSchema = new mongoose.Schema({
   gender: {
     type: String,
     required: true,
+    enum: ["Male", "Female", "Other"],
   },
   dob: {
     type: Date,

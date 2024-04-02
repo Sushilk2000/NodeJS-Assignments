@@ -1,6 +1,7 @@
 const UserModel = require("../Model/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { urlencoded } = require("express");
 const registerUser = async (req, res) => {
   try {
     const password = req.body.password;
@@ -11,7 +12,9 @@ const registerUser = async (req, res) => {
         message: "Passwords do not match",
       });
     } else {
-      const user = await UserModel.create();
+      const user = req.body;
+      delete user.confirmPassword;
+      await UserModel.create(user);
       res.status(200).json({
         success: true,
         message: "User created successfully",
