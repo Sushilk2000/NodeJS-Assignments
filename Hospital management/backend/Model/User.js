@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -32,7 +33,6 @@ const UserSchema = new mongoose.Schema({
   },
   dob: {
     type: Date,
-    required: true,
   },
   role: {
     type: String,
@@ -43,14 +43,26 @@ const UserSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Appointments",
     validate: {
-      validator: function () {
+      validator: function (val) {
         return this.role === "patient";
       },
-      message: "AppointmentHistory is only available for patient",
+      message: "AppointmentHistory is only available for patients",
     },
     select: false,
   },
 });
-
+UserSchema.pre("save", async function (next) {
+  const user = this;
+  if (!user.isModified("password")) {
+    return next();
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 const UserModel = mongoose.model("Users", UserSchema);
 module.exports = UserModel;

@@ -4,23 +4,13 @@ const bcrypt = require("bcrypt");
 const { urlencoded } = require("express");
 const registerUser = async (req, res) => {
   try {
-    const password = req.body.password;
-    const confirmPassword = req.body.confirmPassword;
-    if (password !== confirmPassword) {
-      res.status(404).json({
-        success: false,
-        message: "Passwords do not match",
-      });
-    } else {
-      const user = req.body;
-      delete user.confirmPassword;
-      await UserModel.create(user);
-      res.status(200).json({
-        success: true,
-        message: "User created successfully",
-        user: user,
-      });
-    }
+    const user = req.body;
+    await UserModel.create(user);
+    res.status(200).json({
+      success: true,
+      message: "User created successfully",
+      user: user,
+    });
   } catch (error) {
     res.status(404).json({
       success: false,
@@ -66,6 +56,7 @@ const login = async (req, res) => {
         res.status(404).json({
           success: false,
           message: "Invalid password",
+          error: isPasswordCorrect,
         });
       } else {
         const exptime = Math.floor(Date.now() / 1000 + 3600);
