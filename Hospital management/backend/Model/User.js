@@ -39,17 +39,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
     enum: ["admin", "doctor", "patient"],
   },
-  AppointmentHistory: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Appointments",
-    validate: {
-      validator: function (val) {
-        return this.role === "patient";
-      },
-      message: "AppointmentHistory is only available for patients",
-    },
-    select: false,
-  },
 });
 UserSchema.pre("save", async function (next) {
   const user = this;

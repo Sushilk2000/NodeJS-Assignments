@@ -42,5 +42,5 @@ app.use(
 );
 app.use("/api/v1/appointments", AppointmentRouter);
 app.use("/api/v1/user", UserRouter);
-app.use("/api/v1/messages", MessagesRouter);
+app.use("/api/v1/message", MessagesRouter);
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
