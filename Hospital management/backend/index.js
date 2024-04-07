@@ -27,17 +27,15 @@ const UserRouter = require("./Routes/UserRoutes");
 const MessagesRouter = require("./Routes/messageRoute");
 const mongoose = require("mongoose");
 mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://sushilkkkkk:sushilkkkkk@cluster0.jbfruz6.mongodb.net/"
+  )
   .then(() => {
     console.log("Connected to MongoDB");
   })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
+  .catch(() => {
+    console.log("Could not connect to MongoDB");
   });
-
 app.use(
   fileupload({
     useTempFiles: true,

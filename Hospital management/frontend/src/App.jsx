@@ -22,8 +22,24 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Welcome />} />
-          <Route path="login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="login"
+            element={
+              <Login
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Register
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
           <Route path="/appointment" element={<Appointment />} />
           <Route path="/about" element={<AboutUs />} />
         </Routes>
