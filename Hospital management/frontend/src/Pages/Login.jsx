@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 function Login({ isAuthenticated, setIsAuthenticated }) {
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -7,11 +8,9 @@ function Login({ isAuthenticated, setIsAuthenticated }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:10000/api/v1/user/loginUser",
-
+      const response = await fetch(
+        "https://hospital-management-q6tl.onrender.com/api/v1/user/loginuser",
         {
-          withCredentials: true,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: emailRef.current.value,

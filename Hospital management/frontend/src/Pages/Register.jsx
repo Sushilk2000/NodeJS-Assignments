@@ -17,7 +17,7 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:10000/api/v1/user/registerUser",
+        "https://hospital-management-q6tl.onrender.com/api/v1/user/registeruser",
         {
           header: {
             contentType: "application/json",
@@ -36,7 +36,7 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
       );
       const data = await response.json();
       toast.success(data.message);
-      setIsAuthenticated(true);
+      navigate("/login");
     } catch (error) {
       toast.error(error.message);
     }
@@ -58,6 +58,7 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
             name="firstName"
             id="firstName"
             value={firstName}
+            placeholder="First Name"
             onChange={(e) => setFirstName(e.target.value)}
           />
           <input
@@ -65,6 +66,7 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
             name="lastName"
             id="lastName"
             value={lastName}
+            placeholder="Last Name"
             onChange={(e) => setLastName(e.target.value)}
           />
         </div>
@@ -74,6 +76,7 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
             name="email"
             id="email"
             value={email}
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
@@ -81,16 +84,18 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
             name="phone"
             id="phone"
             value={phone}
+            placeholder="Phone Number"
             onChange={(e) => setPhone(e.target.value)}
           />
         </div>
         <div>
           <input
-            type="text"
-            name="address"
-            id="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            type="password"
+            name="password"
+            id="password"
+            value={password}
+            placeholder="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <input
             type="date"
@@ -112,11 +117,12 @@ function Register({ isAuthenticated, setIsAuthenticated }) {
         </div>
         <div>
           <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            name="address"
+            id="address"
+            value={address}
+            placeholder="Address"
+            onChange={(e) => setAddress(e.target.value)}
           />
         </div>
         <button type="submit">Register</button>
