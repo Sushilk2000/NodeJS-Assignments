@@ -16,16 +16,32 @@ function AppointmentForm({ isAuthenticated, user }) {
   const [doctors, setDoctors] = useState();
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data } = await axios.get("", { withCredentials: true });
+      const { data } = await axios.get("/doctors", { withCredentials: true });
       setDoctors(data.doctors);
     };
   }, []);
-  function handleAppointment(e) {
+  async function handleAppointment(e) {
     e.preventDefault();
     if (!isAuthenticated) {
       toast.error("Please login first");
       return;
     }
+    const appointment = {
+      user: user,
+      dateOfAppointment: appointmentDate,
+      department: department,
+      doctor: doctor,
+    };
+    const response = await fetch(
+      "https://hospital-management-q6tl.onrender.com/api/v1/appointment/createAppointment",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: appointment,
+      }
+    );
   }
   return (
     <>

@@ -69,10 +69,13 @@ const login = async (req, res) => {
           },
           "abcabcabc"
         );
+        delete user._id;
+        delete user.password;
         res.json({
           success: true,
           message: "User logged in successfully",
           token: token,
+          user: user,
         });
       }
     }
@@ -132,7 +135,20 @@ const createAdmin = async (req, res) => {
     });
   }
 };
-
+const getDoctors = async (req, res) => {
+  try {
+    const doctors = await UserModel.find({ role: "doctor" });
+    res.json({
+      success: true,
+      doctors: doctors,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      error: error,
+    });
+  }
+};
 module.exports = {
   registerUser,
   login,
@@ -140,4 +156,5 @@ module.exports = {
   deleteUser,
   createDoctor,
   createAdmin,
+  getDoctors,
 };

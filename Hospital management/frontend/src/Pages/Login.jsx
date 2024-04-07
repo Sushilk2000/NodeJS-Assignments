@@ -1,34 +1,36 @@
 import { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-function Login({ isAuthenticated, setIsAuthenticated }) {
+
+function Login({ isAuthenticated, setIsAuthenticated, setUser, user }) {
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const nav = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "https://hospital-management-q6tl.onrender.com/api/v1/user/loginuser",
         {
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+        },
+        {
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
-          }),
         }
       );
-      const data = await response.json();
-      console.log(data);
-      setIsAuthenticated(true);
-      nav("/");
+      const data = await response.json;
+      if (data.token) {
+        setIsAuthenticated(true);
+        localStorage.setItem("patientToken", data.token);
+        nav("/");
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  if (isAuthenticated) {
-    return nav("/");
-  }
+
   return (
     <div className="container form-component login-form">
       <h2>Sign In</h2>
@@ -38,15 +40,15 @@ function Login({ isAuthenticated, setIsAuthenticated }) {
           type="email"
           name="email"
           id="email"
-          value={emailRef.current.value}
+          ref={emailRef}
           placeholder="Email"
         />
         <input
           type="password"
           name="password"
           id="password"
+          ref={passwordRef}
           placeholder="******"
-          value={passwordRef.current.value}
         />
         <div
           style={{

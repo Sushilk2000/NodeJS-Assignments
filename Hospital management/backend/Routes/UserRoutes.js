@@ -7,4 +7,5 @@ router.patch("/updateuser", UserController.updateUser);
 router.delete("deleteuser", UserController.deleteUser);
 router.post("/createdoctor", UserController.createDoctor);
 router.post("/createadmin", UserController.createAdmin);
+router.get("/getdoctors", UserController.getDoctors);
 module.exports = router;

@@ -13,7 +13,7 @@ import AboutUs from "./Pages/About";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState();
   const [user, setUser] = useState();
 
   return (
@@ -28,6 +28,8 @@ function App() {
               <Login
                 isAuthenticated={isAuthenticated}
                 setIsAuthenticated={setIsAuthenticated}
+                setUser={setUser}
+                user={user}
               />
             }
           />
