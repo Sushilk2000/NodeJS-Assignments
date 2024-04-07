@@ -27,9 +27,7 @@ const UserRouter = require("./Routes/UserRoutes");
 const MessagesRouter = require("./Routes/messageRoute");
 const mongoose = require("mongoose");
 mongoose
-  .connect(
-    "mongodb+srv://sushilkkkkk:sushilkkkkk@cluster0.jbfruz6.mongodb.net/"
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("Connected to MongoDB");
   })
