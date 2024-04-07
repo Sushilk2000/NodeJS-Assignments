@@ -9,7 +9,10 @@ function Messages({ isAuthenticated }) {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch("", { withCredentials: true });
+        const response = await fetch(
+          "http://localhost:10000/api/v1/message/getmessages",
+          { withCredentials: true }
+        );
         const data = await response.json();
         setMessages(data.messages);
       } catch (error) {

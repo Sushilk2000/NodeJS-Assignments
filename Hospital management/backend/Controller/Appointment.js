@@ -1,10 +1,6 @@
-//create a new Appointment
-//get Appointment using User
-//get app Appointments using Doctor
-
 const { AppointmentModel } = require("../Model/Appointment");
 const { AppointmentHistoryModel } = require("../Model/Appointment");
-//get All available Appointments
+
 const createAppointment = async (req, res) => {
   try {
     const appointmentData = req.body;

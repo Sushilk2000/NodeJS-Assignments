@@ -13,7 +13,7 @@ function Sidebar({ isAUthenticated, setIsAuthenticated }) {
   const [show, setShow] = useState(false);
   const handleLogout = async () => {
     await axios
-      .get("http://localhost:4000/api/v1/user/admin/logout", {
+      .get("http://localhost:10000/api/v1/user/admin/logout", {
         withCredentials: true,
       })
       .then((res) => {
