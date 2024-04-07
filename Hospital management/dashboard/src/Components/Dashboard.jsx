@@ -42,7 +42,7 @@ const Dashboard = ({ isAuthenticated, admin }) => {
       toast.error(error.response.data.message);
     }
   };
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
 
