@@ -26,6 +26,9 @@ setInterval(() => {
   restartServer();
 }, 600000);
 
+setInterval(() => {
+  console.log(Date.now());
+}, 30000);
 // Use the PORT environment variable provided by Render.com
 const PORT = 10000;
 app.listen(PORT, () => {
