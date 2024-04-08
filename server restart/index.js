@@ -1,23 +1,24 @@
 const express = require("express");
-const fetch = require("node-fetch");
+let fetch;
+(async () => {
+  const { default: fetchModule } = await import("node-fetch");
+  fetch = fetchModule;
+})();
+
 const app = express();
 
 async function restartServer() {
-  try {
-    const restart = await fetch(
-      "https://api.render.com/v1/services/srv-co9i53djm4es73avovcg/restart",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer rnd_0je2K7yuwyCzQfEwZxnWiwiB14jq",
-        },
-      }
-    );
-    if (restart) {
-      console.log("Server restarted at", Date.now());
+  const restart = await fetch(
+    "https://api.render.com/v1/services/srv-co9i53djm4es73avovcg/restart",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer rnd_0je2K7yuwyCzQfEwZxnWiwiB14jq",
+      },
     }
-  } catch (error) {
-    console.error("Error restarting server:", error);
+  );
+  if (restart) {
+    console.log("Server restarted at", Date.now());
   }
 }
 
