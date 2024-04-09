@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function AppointmentForm({ isAuthenticated, user }) {
   const [appointmentDate, setappointmentDate] = useState();
   const [department, setDepartment] = useState("Pediatrics");
-  const [doctor, setDoctor] = useState("");
+  const [doctor, setDoctor] = useState("test");
   const departmentArray = [
     "Pediatrics",
     "Orthopedics",
@@ -16,9 +16,13 @@ function AppointmentForm({ isAuthenticated, user }) {
   const [doctors, setDoctors] = useState();
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data } = await axios.get("/doctors", { withCredentials: true });
+      const response = await fetch(
+        "https://hospital-management-q6tl.onrender.com/api/v1/user/getdoctors"
+      );
+      const data = await response.json();
       setDoctors(data.doctors);
     };
+    fetchDoctors();
   }, []);
   async function handleAppointment(e) {
     e.preventDefault();

@@ -42,50 +42,54 @@ const login = async (req, res) => {
       email: req.body.email,
     });
     if (!user) {
-      res.status(404).json({
+      return res.status(400).json({
         success: false,
         message: "User not found",
       });
-    } else {
-      const inputPassword = req.body.password;
-      const isPasswordCorrect = bcrypt.compareSync(
-        inputPassword,
-        user.password
-      );
-      if (!isPasswordCorrect) {
-        res.status(404).json({
-          success: false,
-          message: "Invalid password",
-          error: isPasswordCorrect,
-        });
-      } else {
-        const exptime = Math.floor(Date.now() / 1000 + 3600);
-        const token = jwt.sign(
-          {
-            name: user.firstName,
-            role: user.role,
-            id: user._id,
-            exp: exptime,
-          },
-          "abcabcabc"
-        );
-        delete user._id;
-        delete user.password;
-        res.json({
-          success: true,
-          message: "User logged in successfully",
-          token: token,
-          user: user,
-        });
-      }
     }
+
+    const inputPassword = req.body.password;
+    const isPasswordCorrect = bcrypt.compareSync(inputPassword, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid password",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        name: user.firstName,
+        role: user.role,
+        id: user._id,
+      },
+      "abcabcabc", // Use environment variable for JWT secret
+      { expiresIn: Math.floor(Date.now() / 1000 + 3600) } // Use environment variable for token expiry
+    );
+
+    const userWithoutSensitiveInfo = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.json({
+      success: true,
+      message: "User logged in successfully",
+      token: token,
+      user: userWithoutSensitiveInfo,
+    });
   } catch (error) {
-    res.status(404).json({
+    res.status(500).json({
       success: false,
-      error: error,
+      message: "Internal server error",
+      error: error.message,
     });
   }
 };
+
 const deleteUser = (req, res) => {
   try {
     const deletedUser = UserModel.findByIdAndDelete(req.user._id);

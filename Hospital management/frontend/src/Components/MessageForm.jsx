@@ -13,7 +13,7 @@ function MessageForm() {
     try {
       await axios
         .post(
-          "http://localhost:10000/api/v1/messages/",
+          "https://hospital-management-q6tl.onrender.com/api/v1/message/createmessage",
           {
             firstName: firstName.current.value,
             lastName: lastName.current.value,
@@ -32,7 +32,7 @@ function MessageForm() {
         )
         .then((res) => {
           console.log(res);
-          toast.success(res.data.message);
+          toast.success("Message sent successfully");
         });
     } catch (error) {
       toast.error(error);

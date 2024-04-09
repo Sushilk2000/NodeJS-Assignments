@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 function Login({ isAuthenticated, setIsAuthenticated, setUser, user }) {
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -10,24 +10,39 @@ function Login({ isAuthenticated, setIsAuthenticated, setUser, user }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "https://hospital-management-q6tl.onrender.com/api/v1/user/loginuser",
         {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+          }),
         }
       );
-      const data = await response.json;
-      if (data.token) {
-        setIsAuthenticated(true);
-        localStorage.setItem("patientToken", data.token);
-        nav("/");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (data.token) {
+          setIsAuthenticated(true);
+          setUser(data.user);
+          localStorage.setItem("patientToken", data.token);
+          toast.success("login successful");
+          nav("/");
+        }
+      } else {
+        throw new Error("Response is not in JSON format");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

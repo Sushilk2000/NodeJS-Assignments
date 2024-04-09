@@ -19,7 +19,12 @@ function App() {
   return (
     <>
       <Router>
-        <Header />
+        <Header
+          isAuthenticated={isAuthenticated}
+          setIsAuthenticated={setIsAuthenticated}
+          setUser={setUser}
+          user={UserActivation}
+        />
         <Routes>
           <Route path="/" element={<Welcome />} />
           <Route
@@ -42,7 +47,12 @@ function App() {
               />
             }
           />
-          <Route path="/appointment" element={<Appointment />} />
+          <Route
+            path="/appointment"
+            element={
+              <Appointment isAuthenticated={isAuthenticated} user={user} />
+            }
+          />
           <Route path="/about" element={<AboutUs />} />
         </Routes>
         <ToastContainer position="top-center" />

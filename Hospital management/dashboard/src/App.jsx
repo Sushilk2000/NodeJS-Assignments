@@ -19,13 +19,21 @@ function App() {
       <Router>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/"
+            element={
+              <Dashboard isAuthenticated={isAuthenticated} user={user} />
+            }
+            exact
+          />
           <Route
             path="/login"
             element={
               <Login
+                isAuthenticated={isAuthenticated}
                 setIsAuthenticated={setIsAuthenticated}
                 setUser={setUser}
+                user={user}
               />
             }
           />

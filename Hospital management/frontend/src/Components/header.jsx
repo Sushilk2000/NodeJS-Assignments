@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
-function Header({ isAuthenticated, setIsAuthenticated }) {
+import { toast } from "react-toastify";
+function Header({ isAuthenticated, setIsAuthenticated, setUser, user }) {
   const [show, setShow] = useState(false);
   const handleLogout = async () => {
-    await axios
-      .get("http://localhost:4000/api/v1/user/patient/logout", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        setIsAuthenticated(false);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+    // await axios
+    //   .get("http://localhost:4000/api/v1/user/patient/logout", {
+    //     withCredentials: true,
+    //   })
+    //   .then((res) => {
+    //     toast.success(res.data.message);
+    //     setIsAuthenticated(false);
+    //   })
+    //   .catch((err) => {
+    //     toast.error(err.response.data.message);
+    //   });
+    setIsAuthenticated(false);
+    setUser(null);
+    toast.success("Logout successful!");
   };
 
   const navigateTo = useNavigate();

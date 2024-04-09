@@ -1,32 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-function Login({ isAuthenticated, setIsAuthenticated }) {
+function Login({ isAuthenticated, setIsAuthenticated, setUser, user }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:10000/api/v1/user/loginUser",
-
+      const response = await fetch(
+        "https://hospital-management-q6tl.onrender.com/api/v1/user/loginuser",
         {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
+            email: email,
+            password: password,
           }),
         }
       );
       const data = await response.json();
-      console.log(data);
-      setIsAuthenticated(true);
-      nav("/");
+      if (response.ok) {
+        if (data.user.role === "admin") {
+          console.log("it is an admin");
+          setIsAuthenticated(true);
+          setUser(data.user);
+          nav("/");
+        } else {
+          toast.error("Only admins are authorized to access");
+        }
+      } else {
+        if (response.status === 401) {
+          toast.error("Invalid email or password");
+        } else {
+          toast.error("Login failed. Please try again later.");
+        }
+      }
     } catch (error) {
       console.log(error);
+      toast.error("An error occurred. Please try again.");
     }
   };
+
   if (isAuthenticated) {
     return nav("/");
   }

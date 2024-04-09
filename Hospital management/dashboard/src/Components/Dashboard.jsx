@@ -5,14 +5,14 @@ import { toast } from "react-toastify";
 import { GoCheckCircleFill } from "react-icons/go";
 import { AiFillCloseCircle } from "react-icons/ai";
 
-const Dashboard = ({ isAuthenticated, admin }) => {
+const Dashboard = ({ isAuthenticated, user }) => {
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:4000/api/v1/appointment/getall",
+          "https://hospital-management-q6tl.onrender.com//api/v1/appointment/getall",
           { withCredentials: true }
         );
         setAppointments(data.appointments);
@@ -26,7 +26,7 @@ const Dashboard = ({ isAuthenticated, admin }) => {
   const handleUpdateStatus = async (appointmentId, status) => {
     try {
       const { data } = await axios.put(
-        `http://localhost:4000/api/v1/appointment/update/${appointmentId}`,
+        `https://hospital-management-q6tl.onrender.com/api/v1/appointment/update/${appointmentId}`,
         { status },
         { withCredentials: true }
       );
@@ -42,7 +42,7 @@ const Dashboard = ({ isAuthenticated, admin }) => {
       toast.error(error.response.data.message);
     }
   };
-  if (!isAuthenticated) {
+  if (isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
 
@@ -55,7 +55,7 @@ const Dashboard = ({ isAuthenticated, admin }) => {
             <div className="content">
               <div>
                 <p>Hello ,</p>
-                <h5>{admin && `${admin.firstName} ${admin.lastName}`} </h5>
+                <h5>{user && `${user.firstName} ${user.lastName}`} </h5>
               </div>
               <p>
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
