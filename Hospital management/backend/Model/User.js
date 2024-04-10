@@ -39,6 +39,13 @@ const UserSchema = new mongoose.Schema({
     default: "patient",
     enum: ["admin", "doctor", "patient"],
   },
+  department: {
+    type: String,
+    required: function () {
+      return this.role === "doctor";
+    },
+    enum: ["Pediatrics", "Orthopedics", "Cardiology", "Neurology", "Radiology"],
+  },
 });
 UserSchema.pre("save", async function (next) {
   const user = this;

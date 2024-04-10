@@ -12,7 +12,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
     const fetchAppointments = async () => {
       try {
         const { data } = await axios.get(
-          "https://hospital-management-q6tl.onrender.com//api/v1/appointment/getall",
+          "https://hospital-management-q6tl.onrender.com/api/v1/appointment/getall",
           { withCredentials: true }
         );
         setAppointments(data.appointments);
@@ -42,7 +42,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
       toast.error(error.response.data.message);
     }
   };
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
 
