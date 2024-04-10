@@ -15,6 +15,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
           "https://hospital-management-q6tl.onrender.com/api/v1/appointments/getAllAppointments"
         );
         const data = await response.json();
+        console.log(data);
         setAppointments(data.Appointments);
       } catch (error) {
         console.log(error);
@@ -91,7 +92,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
               {appointments && appointments.length > 0
                 ? appointments.map((appointment) => (
                     <tr key={appointment._id}>
-                      <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
+                      <td>{`${appointment.user.firstName} ${appointment.user.lastName}`}</td>
                       <td>{appointment.appointment_date?.substring(0, 16)}</td>
                       <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
                       <td>{appointment.department}</td>
