@@ -25,10 +25,13 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
   const handleAddNewDoctor = async (e) => {
     e.preventDefault();
     try {
-      await fetch(
+      const response = await fetch(
         "https://hospital-management-q6tl.onrender.com/api/v1/user/createdoctor",
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             firstName: firstName,
             lastName: lastName,
@@ -43,7 +46,6 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
         }
       );
     } catch (error) {
-      toast.error(error);
       console.log(error);
     }
   };
