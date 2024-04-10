@@ -50,8 +50,14 @@ function App() {
               />
             }
           />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/doctors" element={<Doctors />} />
+          <Route
+            path="/messages"
+            element={<Messages isAuthenticated={isAuthenticated} />}
+          />
+          <Route
+            path="/doctors"
+            element={<Doctors isAuthenticated={isAuthenticated} />}
+          />
         </Routes>
       </Router>
     </>

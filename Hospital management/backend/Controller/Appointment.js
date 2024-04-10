@@ -5,19 +5,20 @@ const createAppointment = async (req, res) => {
   try {
     const appointmentData = req.body;
     const appointment = await AppointmentModel.create(appointmentData);
-    res.json({
+    res.status(201).json({
       success: true,
-      message: "Appointments created successfully",
-      AppointmentDetails: appointment,
+      message: "Appointment created successfully",
+      appointmentDetails: appointment,
     });
   } catch (error) {
-    res.status(404).json({
+    res.status(400).json({
       success: false,
-      message: "Something went wrong",
-      error: error,
+      message: "Failed to create appointment",
+      error: error.message,
     });
   }
 };
+
 const UserAppointmentHistory = async (req, res) => {
   try {
     const Appointments = await AppointmentModel.find({ user: req.user._id });

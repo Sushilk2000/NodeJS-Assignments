@@ -8,13 +8,13 @@ const Doctors = ({ isAuthenticated }) => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:10000/api/v1/user/doctors",
-          { withCredentials: true }
+        const response = await fetch(
+          "https://hospital-management-q6tl.onrender.com/api/v1/user/getdoctors"
         );
+        const data = await response.json();
         setDoctors(data.doctors);
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error);
       }
     };
     fetchDoctors();

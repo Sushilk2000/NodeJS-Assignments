@@ -12,17 +12,7 @@ import { toast } from "react-toastify";
 function Sidebar({ isAUthenticated, setIsAuthenticated }) {
   const [show, setShow] = useState(false);
   const handleLogout = async () => {
-    await axios
-      .get("http://localhost:10000/api/v1/user/admin/logout", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        setIsAuthenticated(false);
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
+    setIsAuthenticated(false);
   };
 
   const nav = useNavigate();
@@ -42,7 +32,7 @@ function Sidebar({ isAUthenticated, setIsAuthenticated }) {
 
           <AiFillMessage
             onClick={() => {
-              nav("/Messsages");
+              nav("/messages");
               setShow(!show);
             }}
           />

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function AppointmentForm({ isAuthenticated, user }) {
   const [appointmentDate, setappointmentDate] = useState();
   const [department, setDepartment] = useState("Pediatrics");
-  const [doctor, setDoctor] = useState("test");
+  const [doctor, setDoctor] = useState("");
   const departmentArray = [
     "Pediatrics",
     "Orthopedics",
@@ -21,6 +21,7 @@ function AppointmentForm({ isAuthenticated, user }) {
       );
       const data = await response.json();
       setDoctors(data.doctors);
+      console.log(data.doctors);
     };
     fetchDoctors();
   }, []);
@@ -30,22 +31,30 @@ function AppointmentForm({ isAuthenticated, user }) {
       toast.error("Please login first");
       return;
     }
-    const appointment = {
-      user: user,
-      dateOfAppointment: appointmentDate,
-      department: department,
-      doctor: doctor,
-    };
-    const response = await fetch(
-      "https://hospital-management-q6tl.onrender.com/api/v1/appointment/createAppointment",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: appointment,
-      }
-    );
+    try {
+      const appointment = {
+        user: user._id,
+        dateOfAppointment: appointmentDate,
+        department: department,
+        doctor: doctor,
+      };
+      console.log(appointment);
+      const response = await fetch(
+        "https://hospital-management-q6tl.onrender.com/api/v1/appointments/createAppointment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(appointment),
+        }
+      );
+      const data = await response.json();
+      toast.success("appointment created successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    }
   }
   return (
     <>
@@ -71,19 +80,22 @@ function AppointmentForm({ isAuthenticated, user }) {
             <select
               name="doctor"
               id="doctor"
+              required
               onChange={(e) => {
                 setDoctor(e.target.value);
               }}
             >
-              {doctors
-                ?.filter((doctor) => {
-                  return doctor.department === department;
-                })
-                .map((doctor, index) => (
-                  <option value={doctor._id} key={index}>
-                    {doctor.name}
-                  </option>
-                ))}
+              <option value="">Select Doctor</option>
+              {doctors &&
+                doctors
+                  .filter((doctor) => doctor.department === department)
+                  .map((doctor, index) => {
+                    return (
+                      <option value={doctor._id} key={index}>
+                        {doctor.firstName + " " + doctor.lastName}
+                      </option>
+                    );
+                  })}
             </select>
           </div>
           <div>

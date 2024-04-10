@@ -53,6 +53,7 @@ function App() {
               <Appointment isAuthenticated={isAuthenticated} user={user} />
             }
           />
+
           <Route path="/about" element={<AboutUs />} />
         </Routes>
         <ToastContainer position="top-center" />

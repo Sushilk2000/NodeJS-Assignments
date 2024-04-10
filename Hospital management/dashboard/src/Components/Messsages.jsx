@@ -10,8 +10,7 @@ function Messages({ isAuthenticated }) {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          "http://localhost:10000/api/v1/message/getmessages",
-          { withCredentials: true }
+          "https://hospital-management-q6tl.onrender.com/api/v1/message/getmessages"
         );
         const data = await response.json();
         setMessages(data.messages);
