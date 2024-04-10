@@ -41,7 +41,15 @@ function App() {
             }
           />
           <Route path="/doctor/addnew" element={<AddNewDoctor />} />
-          <Route path="/admin/addnew" element={<AddNewAdmin />} />
+          <Route
+            path="/admin/addnew"
+            element={
+              <AddNewAdmin
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
           <Route path="/messages" element={<Messages />} />
           <Route path="/doctors" element={<Doctors />} />
         </Routes>

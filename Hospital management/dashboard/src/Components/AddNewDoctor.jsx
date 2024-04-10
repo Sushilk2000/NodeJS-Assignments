@@ -19,7 +19,7 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
-  const [department, setDepartment] = useState("Pediatrics");
+  const [department, setDepartment] = useState("");
   const navigateTo = useNavigate();
 
   const handleAddNewDoctor = async (e) => {
@@ -45,8 +45,12 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
           }),
         }
       );
+      toast.success("Doctor added successfully");
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong");
+      setFirstName("");
+      setLastName("");
     }
   };
 
@@ -65,12 +69,14 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
               type="text"
               placeholder="First Name"
               value={firstName}
+              required
               onChange={(e) => setFirstName(e.target.value)}
             />
             <input
               type="text"
               placeholder="Last Name"
               value={lastName}
+              required
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
@@ -79,12 +85,14 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
               type="text"
               placeholder="Email"
               value={email}
+              required
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="number"
               placeholder="Mobile Number"
               value={phone}
+              required
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
@@ -93,6 +101,7 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
               type={"date"}
               placeholder="Date of Birth"
               value={dob}
+              required
               onChange={(e) => setDob(e.target.value)}
             />
           </div>
@@ -100,12 +109,14 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
             <select value={gender} onChange={(e) => setGender(e.target.value)}>
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
+
               <option value="Female">Female</option>
             </select>
             <input
               type="password"
               placeholder="Password"
               value={password}
+              required
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
@@ -118,6 +129,7 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
                 console.log(e.target.value);
               }}
             >
+              <option value="">Select Department</option>
               {departmentArray.map((department, index) => (
                 <option value={department} key={index}>
                   {department}
@@ -126,7 +138,9 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
             </select>
             <input
               type="text"
+              required
               name="address"
+              placeholder="Address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />

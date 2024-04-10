@@ -11,38 +11,39 @@ const AddNewAdmin = ({ isAuthenticated, setIsAuthenticated }) => {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
   const navigateTo = useNavigate();
 
   const handleAddNewAdmin = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
-          "http://localhost:4000/api/v1/user/createadmin",
-          { firstName, lastName, email, phone, nic, dob, gender, password },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/");
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPhone("");
-          setDob("");
-          setGender("");
-          setPassword("");
-        });
+      const response = await fetch(
+        "https://hospital-management-q6tl.onrender.com/api/v1/user/createadmin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone,
+            address: address,
+            dob: dob,
+            gender: gender,
+            password: password,
+          }),
+        }
+      );
+      const data = await response.json();
+      toast.success("Admin added successfully");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error("Something went wrong");
     }
   };
 
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
 
@@ -99,6 +100,14 @@ const AddNewAdmin = ({ isAuthenticated, setIsAuthenticated }) => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              value={address}
+              placeholder="Address"
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           <div style={{ justifyContent: "center", alignItems: "center" }}>
