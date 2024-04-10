@@ -4,6 +4,7 @@ const { AppointmentHistoryModel } = require("../Model/Appointment");
 const createAppointment = async (req, res) => {
   try {
     const appointmentData = req.body;
+    console.log(appointmentData);
     const appointment = await AppointmentModel.create(appointmentData);
     res.status(201).json({
       success: true,
