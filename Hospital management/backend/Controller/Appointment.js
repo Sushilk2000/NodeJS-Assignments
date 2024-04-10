@@ -100,7 +100,15 @@ const updateAppointment = async (req, res) => {
 };
 const getAllActiveAppointments = async (req, res) => {
   try {
-    const Appointments = await AppointmentModel.find();
+    const Appointments = await AppointmentModel.find()
+      .populate({
+        path: "user",
+        select: "-password -role",
+      })
+      .populate({
+        path: "doctor",
+        select: "-password -role -department",
+      });
     res.json({
       success: true,
       Appointments: Appointments,

@@ -11,12 +11,13 @@ const Dashboard = ({ isAuthenticated, user }) => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const { data } = await axios.get(
-          "https://hospital-management-q6tl.onrender.com/api/v1/appointment/getall",
-          { withCredentials: true }
+        const response = await fetch(
+          "https://hospital-management-q6tl.onrender.com/api/v1/appointments/getAllAppointments"
         );
-        setAppointments(data.appointments);
+        const data = await response.json();
+        setAppointments(data.Appointments);
       } catch (error) {
+        console.log(error);
         setAppointments([]);
       }
     };
@@ -91,7 +92,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
                 ? appointments.map((appointment) => (
                     <tr key={appointment._id}>
                       <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
-                      <td>{appointment.appointment_date.substring(0, 16)}</td>
+                      <td>{appointment.appointment_date?.substring(0, 16)}</td>
                       <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
                       <td>{appointment.department}</td>
                       <td>
