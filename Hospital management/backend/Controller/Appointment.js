@@ -11,6 +11,7 @@ const createAppointment = async (req, res) => {
       appointmentDetails: appointment,
     });
   } catch (error) {
+    console.log("appointment creation error", error);
     res.status(400).json({
       success: false,
       message: "Failed to create appointment",
