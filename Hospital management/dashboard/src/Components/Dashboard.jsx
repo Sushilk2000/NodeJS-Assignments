@@ -93,7 +93,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
                 ? appointments.map((appointment) => (
                     <tr key={appointment._id}>
                       <td>{`${appointment.user.firstName} ${appointment.user.lastName}`}</td>
-                      <td>{appointment.appointment_date?.substring(0, 16)}</td>
+                      <td>{appointment.dateOfAppointment?.substring(0, 10)}</td>
                       <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
                       <td>{appointment.department}</td>
                       <td>
@@ -133,8 +133,6 @@ const Dashboard = ({ isAuthenticated, user }) => {
                 : "No Appointments Found!"}
             </tbody>
           </table>
-
-          {}
         </div>
       </section>
     </>
