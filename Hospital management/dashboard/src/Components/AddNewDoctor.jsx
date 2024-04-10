@@ -4,41 +4,47 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
+  const departmentArray = [
+    "Pediatrics",
+    "Orthopedics",
+    "Cardiology",
+    "Neurology",
+    "Radiology",
+  ];
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
+  const [department, setDepartment] = useState("Pediatrics");
   const navigateTo = useNavigate();
 
   const handleAddNewDoctor = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
-          "http://localhost:4000/api/v1/user/createdoctor",
-          { firstName, lastName, email, phone, nic, dob, gender, password },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/");
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPhone("");
-          setDob("");
-          setGender("");
-          setPassword("");
-        });
+      await fetch(
+        "https://hospital-management-q6tl.onrender.com/api/v1/user/createdoctor",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone,
+            address: address,
+            dob: dob,
+            gender: gender,
+            password: password,
+            department: department,
+          }),
+        }
+      );
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error);
+      console.log(error);
     }
   };
 
@@ -99,6 +105,28 @@ const AddNewDoctor = ({ isAuthenticated, setIsAuthenticated }) => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <select
+              name="department"
+              id="department"
+              onChange={(e) => {
+                setDepartment(e.target.value);
+                console.log(e.target.value);
+              }}
+            >
+              {departmentArray.map((department, index) => (
+                <option value={department} key={index}>
+                  {department}
+                </option>
+              ))}
+            </select>
+            <input
+              type="text"
+              name="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           <div style={{ justifyContent: "center", alignItems: "center" }}>

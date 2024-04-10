@@ -17,7 +17,10 @@ function App() {
   return (
     <>
       <Router>
-        <Sidebar />
+        <Sidebar
+          isAUthenticated={isAuthenticated}
+          setIsAuthenticated={setIsAuthenticated}
+        />
         <Routes>
           <Route
             path="/"

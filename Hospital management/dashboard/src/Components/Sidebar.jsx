@@ -42,7 +42,7 @@ function Sidebar({ isAUthenticated, setIsAuthenticated }) {
 
           <AiFillMessage
             onClick={() => {
-              MdNoAccounts("/Messsages");
+              nav("/Messsages");
               setShow(!show);
             }}
           />
