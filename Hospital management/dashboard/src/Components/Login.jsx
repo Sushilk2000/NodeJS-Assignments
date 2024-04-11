@@ -49,7 +49,7 @@ function Login({ isAuthenticated, setIsAuthenticated, setUser, user }) {
   return (
     <>
       <div className="container form-component login-form">
-        <img src="/public/logo.png" alt="logo" className="logo" />
+        <img src="/logo.png" alt="logo" className="logo" />
         <h1 className="form-title">Welcome to ZeeCare</h1>
         <p>Only admins are authorized to access</p>
         <form onSubmit={handleLogin}>

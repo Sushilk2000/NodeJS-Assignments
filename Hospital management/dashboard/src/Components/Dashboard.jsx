@@ -53,7 +53,7 @@ const Dashboard = ({ isAuthenticated, user }) => {
       <section className="dashboard page">
         <div className="banner">
           <div className="firstBox">
-            <img src="/public/doc.png" alt="docImg" />
+            <img src="/doc.png" alt="docImg" />
             <div className="content">
               <div>
                 <p>Hello ,</p>
