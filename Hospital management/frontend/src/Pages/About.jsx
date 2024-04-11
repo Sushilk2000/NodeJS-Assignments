@@ -5,7 +5,7 @@ function AboutUs() {
     <>
       <Hero
         title={"Learn More About Us | ZeeCare Medical Institute"}
-        imageUrl={"/public/contact.png"}
+        imageUrl={"/contact.png"}
       />
       <Biography />
     </>

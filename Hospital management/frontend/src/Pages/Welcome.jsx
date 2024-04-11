@@ -10,7 +10,7 @@ function Welcome() {
         title={
           "Welcome to ZeeCare Medical Institute | Your Trusted Healthcare Provider"
         }
-        imageUrl={"/public/hero.png"}
+        imageUrl={"/hero.png"}
       />
       <Biography />
       <Departments />

@@ -2,7 +2,7 @@ function Biography() {
   return (
     <div className="container biography">
       <div className="banner">
-        <img src="/public/about.png" alt="" />
+        <img src="/about.png" alt="" />
       </div>
       <div className="banner">
         <p>Biography</p>
